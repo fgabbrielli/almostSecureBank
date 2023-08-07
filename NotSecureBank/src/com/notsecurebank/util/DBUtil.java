@@ -135,6 +135,38 @@ public class DBUtil {
         return hasGoldVisaDelivery;
     }
 
+    public static boolean isPreApprovedForGoldVisa(String username) {
+        LOG.debug("isPreApprovedForGoldVisa('" + username + "')");
+
+        if (username == null || username.trim().length() == 0)
+            return true;
+
+        boolean isPreApprovedForGoldVisa = false;
+
+        try {
+
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM <TABLE_NAME> WHERE USER_ID = ? AND <COLUMN_NAME> = ?");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, 'S');
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                if (resultSet.getInt(1) > 0) {
+                    isPreApprovedForGoldVisa = true;
+                }
+            }
+
+        } catch (Exception e) {
+            isPreApprovedForGoldVisa = true;
+            LOG.error(e.toString());
+        }
+
+        LOG.info("'" + username + "' is pre approved Gold Visa ? " + isPreApprovedForGoldVisa);
+        return isPreApprovedForGoldVisa;
+    }
+
     public static boolean setGoldVisaDelivery(String username) {
         LOG.debug("setGoldVisaDelivery('" + username + "')");
 
