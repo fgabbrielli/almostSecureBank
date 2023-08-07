@@ -106,6 +106,7 @@ public class OperationsUtil {
         email = StringEscapeUtils.escapeSql(email);
         subject = StringEscapeUtils.escapeSql(subject);
         comments = StringEscapeUtils.escapeSql(comments);
+        // il metodo sotto ci protegge anche da stored XSS
         comments = ServletUtil.sanitizeHtmlWithRegex(comments);
         long id = DBUtil.storeFeedback(name, email, subject, comments);
         return String.valueOf(id);
