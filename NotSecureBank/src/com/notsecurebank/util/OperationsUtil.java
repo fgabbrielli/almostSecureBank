@@ -20,6 +20,11 @@ public class OperationsUtil {
 
     public static String doTransfer(HttpServletRequest request, long creditActId, String accountIdString, double amount) {
         LOG.debug("doTransfer(HttpServletRequest, " + creditActId + ", '" + accountIdString + "', " + amount + ")");
+        // verify CSRF token
+        if (!ServletUtil.verifyCSRFToken(request)) {
+            LOG.error("CSRF token verification failed");
+            return "ERROR: CSRF token verification failed";
+        }
 
         long debitActId = 0;
 
