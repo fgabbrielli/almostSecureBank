@@ -170,6 +170,28 @@ public class ServletUtil {
         return new ArrayList<File>();
     }
 
+    static public boolean isLoggedinAdmin(HttpServletRequest request) {
+        LOG.info("Is logged in?");
+
+        try {
+            // Check user is logged in
+            User user = (User) request.getSession().getAttribute(ServletUtil.SESSION_ATTR_USER);
+            Object admObj = request.getSession().getAttribute(ServletUtil.SESSION_ATTR_ADMIN_KEY);
+            if (user == null || user.getRole() != Role.Admin || admObj == null || admObj
+                    instanceof String && !(((String) admObj).equals(ServletUtil.SESSION_ATTR_ADMIN_VALUE)) {
+                LOG.info("False.");
+                return false;
+            }
+        } catch (Exception e) {
+            LOG.error(e.toString());
+            LOG.info("False.");
+            return false;
+        }
+
+        LOG.info("True.");
+        return true;
+    }
+
     public static void addSpecialBankUsers(String username, String password, String firstname, String lastname) {
         DBUtil.addSpecialUser(username, password, firstname, lastname);
     }
